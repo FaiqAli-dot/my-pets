@@ -30,6 +30,7 @@ const renderer = new THREE.WebGLRenderer({
   canvas,
   alpha: true,
   antialias: true,
+  preserveDrawingBuffer: true,
   powerPreference: 'low-power'
 })
 renderer.setClearColor(0x000000, 0)
@@ -110,8 +111,30 @@ async function loadPreview(def: PetDefinition): Promise<void> {
   try {
     const gltf = await loader.loadAsync(url)
     currentRoot = gltf.scene
-    currentRoot.scale.setScalar(def.scale)
-    currentRoot.position.y = def.yOffset
+    currentRoot.traverse((obj) => {
+      const mesh = obj as THREE.Mesh
+      if (!mesh.isMesh) return
+      const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material]
+      for (const m of mats) {
+        const mat = m as THREE.MeshStandardMaterial
+        if (mat.map) {
+          mat.map.colorSpace = THREE.SRGBColorSpace
+          mat.map.needsUpdate = true
+        }
+        mat.transparent = typeof mat.opacity === 'number' ? mat.opacity < 1 : false
+        mat.needsUpdate = true
+      }
+      mesh.frustumCulled = false
+    })
+    currentRoot.updateMatrixWorld(true)
+    const raw = new THREE.Box3().setFromObject(currentRoot)
+    const rawSize = new THREE.Vector3()
+    raw.getSize(rawSize)
+    const normalize = 1.05 / Math.max(rawSize.y, 1e-3)
+    currentRoot.scale.setScalar(normalize * def.scale)
+    currentRoot.updateMatrixWorld(true)
+    const fitted = new THREE.Box3().setFromObject(currentRoot)
+    currentRoot.position.y = -fitted.min.y + def.yOffset
     scene.add(currentRoot)
     mixer = new THREE.AnimationMixer(currentRoot)
     for (const c of gltf.animations) {

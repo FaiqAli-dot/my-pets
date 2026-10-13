@@ -25,6 +25,7 @@ export class PetRenderer {
       alpha: true,
       antialias: true,
       premultipliedAlpha: false,
+      preserveDrawingBuffer: true,
       powerPreference: 'low-power'
     })
     this.renderer.setClearColor(0x000000, 0)

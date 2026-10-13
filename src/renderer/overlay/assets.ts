@@ -39,19 +39,46 @@ export async function loadPetModel(
       mesh.receiveShadow = false
       const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material]
       for (const m of mats) {
-        const mat = m as THREE.MeshStandardMaterial
+        const mat = m as THREE.MeshStandardMaterial & {
+          map?: THREE.Texture | null
+          opacity?: number
+        }
+        // Gobkit atlases are opaque unlit/baked color. Never force transparent
+        // from map.format (truthy enum) — that made meshes invisible on some GPUs.
+        if (mat.map) {
+          mat.map.colorSpace = THREE.SRGBColorSpace
+          mat.map.needsUpdate = true
+        }
         if ('transparent' in mat) {
-          // Keep alpha from textures if any; otherwise opaque
-          mat.transparent = Boolean(mat.map && mat.map.format)
+          mat.transparent = typeof mat.opacity === 'number' ? mat.opacity < 1 : false
           mat.depthWrite = true
         }
+        mat.needsUpdate = true
       }
+      mesh.frustumCulled = false
     }
   })
 
-  root.scale.setScalar(def.scale)
+  // Gobkit packs vary in authored units (some are ~metres, some hundreds of units).
+  // Normalize to a ~1.05 unit tall pet, then apply the definition's artistic scale.
+  root.updateMatrixWorld(true)
+  const rawBounds = new THREE.Box3().setFromObject(root)
+  const rawSize = new THREE.Vector3()
+  rawBounds.getSize(rawSize)
+  const rawHeight = Math.max(rawSize.y, 1e-3)
+  const normalize = 1.05 / rawHeight
+  root.scale.setScalar(normalize * def.scale)
   root.rotation.y = def.yawOffset
-  root.position.y = def.yOffset
+  root.updateMatrixWorld(true)
+  const fitted = new THREE.Box3().setFromObject(root)
+  // Sit feet near y=0, then apply definition offset.
+  root.position.y = -fitted.min.y + def.yOffset
+
+  const fittedSize = new THREE.Vector3()
+  fitted.getSize(fittedSize)
+  console.info(
+    `[pet-assets] loaded ${def.id} rawHeight=${rawHeight.toFixed(2)} fitted=${fittedSize.x.toFixed(2)}x${fittedSize.y.toFixed(2)}x${fittedSize.z.toFixed(2)}`
+  )
 
   const mixer = new THREE.AnimationMixer(root)
   const clips: Record<string, THREE.AnimationClip> = {}
