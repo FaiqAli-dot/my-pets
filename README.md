@@ -45,16 +45,15 @@ See [`docs/TEST_REPORT.md`](docs/TEST_REPORT.md) for what was verified in CI vs 
 
 ## Build (macOS) — preferred
 
-On a Mac:
+**On a Mac** (produces `.dmg` + `.zip`):
 
 ```bash
-# Unsigned .dmg + .zip for arm64 and x64
 npm run dist:mac
 ```
 
 Artifacts land in `release/`:
 
-- `Desktop Pet Companion-0.1.0.dmg` (and arch-specific names if configured)
+- `Desktop Pet Companion-0.1.0.dmg`
 - `Desktop Pet Companion-0.1.0-arm64.zip` / `-x64.zip`
 
 Open the `.dmg`, drag the app to Applications. **Unsigned builds:** right-click → Open the first time (Gatekeeper), or:
@@ -65,11 +64,18 @@ xattr -cr "/Applications/Desktop Pet Companion.app"
 
 Code signing / notarization are not configured (`identity: null`). Add an Apple Developer identity in `package.json` → `build.mac` when you are ready to ship signed.
 
+**On Linux CI:** `.dmg` cannot be built (`dmg-license` is Darwin-only). Use zip instead:
+
+```bash
+npm run build && npx electron-builder --mac zip --arm64
+# → release/Desktop Pet Companion-0.1.0-arm64.zip
+```
+
 ### Unpackaged Mac build (faster)
 
 ```bash
 npm run dist:mac:dir
-# → release/mac*/*.app
+# → release/mac-arm64/*.app or release/mac/*.app
 ```
 
 ## Windows (optional, later)

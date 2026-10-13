@@ -6,7 +6,8 @@ CI / agent environment: **Linux x64 cloud VM** (no macOS GUI, no Apple code sign
 
 ## Automated tests (vitest)
 
-Command: `npm test`
+Command: `npm test`  
+**Result: 20/20 passed** (bounds, behavior, persistence) on Linux Node 22.
 
 | Area | Coverage |
 |------|----------|
@@ -29,7 +30,8 @@ Gobkit GLB clip names were verified offline by parsing the GLB JSON chunk for `C
 |----------|--------------|-------|
 | Unit logic (bounds, FSM, prefs, clips) | **Yes** (Linux) | Fully automated |
 | TypeScript compile / Vite build | **Yes** (Linux) | `npm run build` / `typecheck` |
-| macOS `.dmg` packaging | **Attempted on Linux** | May succeed as unsigned artifact via electron-builder; signing/notarization **not** available in this VM |
+| macOS `.zip` packaging | **Yes (Linux CI)** | `electron-builder --mac zip` produced unsigned `release/Desktop Pet Companion-0.1.0-arm64.zip` (and x64). Code signing skipped (macOS-only). |
+| macOS `.dmg` packaging | **Not on Linux** | `dmg-license` / DMG tooling requires Darwin. Run `npm run dist:mac` on a Mac for `.dmg`. |
 | Transparent overlay compositing | **Not on macOS** | Requires macOS window server |
 | `setIgnoreMouseEvents({ forward })` click-through | **Not on macOS** | Must be verified on a Mac desktop |
 | Menu bar tray + `LSUIElement` | **Not on macOS** | Implemented; needs Mac smoke test |
