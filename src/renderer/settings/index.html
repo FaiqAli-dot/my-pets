@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: file: blob:; connect-src 'self' file: blob:;"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pet Settings</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <p class="brand">Desktop Pet Companion</p>
+        <h1>Settings</h1>
+      </header>
+
+      <form id="settings-form">
+        <section>
+          <h2>Companion</h2>
+          <label>
+            Pet
+            <select id="pet-id"></select>
+          </label>
+          <label>
+            Name
+            <input id="pet-name" maxlength="32" autocomplete="off" />
+          </label>
+          <label>
+            Personality
+            <select id="personality"></select>
+          </label>
+        </section>
+
+        <section>
+          <h2>Activity</h2>
+          <label class="row">
+            <input type="checkbox" id="wander" />
+            Wander around the desktop
+          </label>
+          <label class="row">
+            <input type="checkbox" id="sleep" />
+            Take naps
+          </label>
+          <label>
+            Activity level
+            <input type="range" id="activity" min="0.25" max="2" step="0.05" />
+            <span id="activity-label">1.00×</span>
+          </label>
+          <label class="row">
+            <input type="checkbox" id="paused" />
+            Pause behavior
+          </label>
+        </section>
+
+        <section>
+          <h2>Desktop</h2>
+          <label class="row">
+            <input type="checkbox" id="always-on-top" />
+            Always on top
+          </label>
+          <label class="row">
+            <input type="checkbox" id="hidden" />
+            Hide pet
+          </label>
+          <label class="row">
+            <input type="checkbox" id="launch-startup" />
+            Launch at login
+          </label>
+        </section>
+
+        <div class="actions">
+          <button type="submit" class="primary">Save</button>
+          <button type="button" id="open-setup" class="ghost">Change pet wizard…</button>
+          <button type="button" id="quit" class="danger">Quit</button>
+        </div>
+        <p id="status" class="status" aria-live="polite"></p>
+      </form>
+    </div>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

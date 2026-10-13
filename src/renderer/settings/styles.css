@@ -1,0 +1,142 @@
+:root {
+  --bg: #142821;
+  --panel: rgba(255, 255, 255, 0.06);
+  --ink: #f3fff7;
+  --muted: #a9cbbb;
+  --accent: #ffb703;
+  --danger: #ef476f;
+  --stroke: rgba(255, 255, 255, 0.12);
+  --font-display: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+  --font-body: 'Avenir Next', 'Trebuchet MS', 'Segoe UI', sans-serif;
+  font-family: var(--font-body);
+  color: var(--ink);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background:
+    radial-gradient(700px 360px at 0% 0%, #2f6b55, transparent 60%),
+    linear-gradient(165deg, #0f2a24, var(--bg));
+}
+
+.wrap {
+  padding: 22px 20px 28px;
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+.brand {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+  letter-spacing: -0.02em;
+}
+
+header h1 {
+  margin: 2px 0 16px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+form section {
+  background: var(--panel);
+  border: 1px solid var(--stroke);
+  border-radius: 16px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+h2 {
+  margin: 0 0 10px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+label {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 10px;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+label.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+}
+
+label.row input {
+  width: auto;
+}
+
+input[type='text'],
+input:not([type]),
+select,
+input[type='range'] {
+  width: 100%;
+}
+
+input,
+select {
+  border: 1px solid var(--stroke);
+  background: rgba(0, 0, 0, 0.22);
+  color: var(--ink);
+  border-radius: 10px;
+  padding: 9px 11px;
+  font: inherit;
+}
+
+#activity-label {
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.actions {
+  display: grid;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+button {
+  border: 0;
+  border-radius: 12px;
+  padding: 11px 14px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.primary {
+  background: linear-gradient(135deg, #ffb703, #fb8500);
+  color: #1a2e22;
+}
+
+.ghost {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--ink);
+  border: 1px solid var(--stroke);
+}
+
+.danger {
+  background: rgba(239, 71, 111, 0.16);
+  color: #ffc2d0;
+  border: 1px solid rgba(239, 71, 111, 0.35);
+}
+
+.status {
+  min-height: 1.2em;
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
